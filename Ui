@@ -1,0 +1,1460 @@
+function BlossomLib:Create(Title)
+    local Window = {
+        PreviousTab = nil,
+        OpenedDropdown = nil,
+        canOpen = true
+    }
+
+    local UIS = game:GetService("UserInputService")
+
+    UIS.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == MenuToggle then
+            ScreenGui.Enabled = not ScreenGui.Enabled
+        end
+    end)
+
+    local UserInputService = game:GetService("UserInputService")
+    local function checkInputType()
+        if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+            return "Mobile"
+        elseif UserInputService.KeyboardEnabled and not UserInputService.TouchEnabled then
+            return "Keyboard"
+        else
+            return "Hybrid"
+        end
+    end
+
+    local inputType = checkInputType()
+    if inputType == "Mobile" then
+        local sg = Instance.new("ScreenGui", gethui())
+
+        local mobile_button = Instance.new("TextButton")
+        mobile_button.Name = "Mobile"
+        mobile_button.BackgroundColor3 = Color3.fromRGB(27, 28, 33)
+        mobile_button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        mobile_button.BorderSizePixel = 0
+        mobile_button.Size = UDim2.new(0, 50, 0, 50)
+        mobile_button.Position = UDim2.new(0.8, -32, 0, 50)
+        mobile_button.AutoButtonColor = false
+        mobile_button.Modal = true
+        mobile_button.FontFace = Font.new("rbxasset://fonts/families/Montserrat.json", Enum.FontWeight.SemiBold)
+        mobile_button.Text = ""
+        mobile_button.TextColor3 = Color3.fromRGB(0, 0, 0)
+        mobile_button.TextSize = 14
+        mobile_button.Parent = sg
+        mobile_button.Visible = true
+        mobile_button.ZIndex = 100
+
+        local UICorner = Instance.new("UICorner")
+        UICorner.CornerRadius = UDim.new(0, 13)
+        UICorner.Parent = mobile_button
+
+        local shadowMobile = Instance.new("ImageLabel")
+        shadowMobile.Name = "Shadow"
+        shadowMobile.Parent = mobile_button
+        shadowMobile.AnchorPoint = Vector2.new(0.5, 0.5)
+        shadowMobile.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        shadowMobile.BackgroundTransparency = 1
+        shadowMobile.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        shadowMobile.BorderSizePixel = 0
+        shadowMobile.Position = UDim2.new(0.5, 0, 0.5, 0)
+        shadowMobile.Size = UDim2.new(0, 62, 0, 62)
+        shadowMobile.ZIndex = 99
+        shadowMobile.Image = "rbxassetid://17183270335"
+        shadowMobile.ImageTransparency = 0.2
+
+        local Icon = Instance.new("ImageLabel")
+        Icon.Name = "Icon"
+        Icon.Parent = mobile_button
+        Icon.AnchorPoint = Vector2.new(0.5, 0.5)
+        Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Icon.BackgroundTransparency = 1
+        Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        Icon.BorderSizePixel = 0
+        Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+        Icon.Size = UDim2.new(0, 30, 0, 30)
+        Icon.ZIndex = 101
+        Icon.Image = "http://www.roblox.com/asset/?id=91364917322700"
+
+        mobile_button.MouseButton1Click:Connect(function()
+            ScreenGui.Enabled = not ScreenGui.Enabled
+        end)
+    end
+
+    local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+    local referenceHeight = 1440
+    local mobileScaleBoost = 1.25
+
+    local scaleMultiplier = Camera.ViewportSize.Y / referenceHeight
+    if isMobile then
+        scaleMultiplier *= mobileScaleBoost
+    end
+
+    local UiScale = createInstance("UIScale", {
+        Scale = scaleMultiplier,
+        Parent = ScreenGui
+    })
+
+    Camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+        local newScale = Camera.ViewportSize.Y / referenceHeight
+        if isMobile then
+            newScale *= mobileScaleBoost
+        end
+        UiScale.Scale = newScale
+    end)
+
+    local Main = createInstance("Frame", {
+        Name = "Main",
+        Position = UDim2.new(0.320, 0.000, 0.178, 0.000),
+        Size = UDim2.new(0.000, 685.000, 0.000, 664.000),
+        Parent = ScreenGui,
+        BackgroundColor3 = Color3.fromRGB(17, 17, 20),
+        BorderSizePixel = 0,
+        ZIndex = 5
+    })
+
+    CreateDrag(Main)
+
+    local UICorner = createInstance("UICorner", {
+        Parent = Main
+    })
+
+    local Header = createInstance("Frame", {
+        Name = "Header",
+        Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+        Size = UDim2.new(0.000, 685.000, 0.000, 57.000),
+        Parent = Main,
+        BackgroundColor3 = Color3.fromRGB(22, 22, 27),
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local UICorner_1 = createInstance("UICorner", {
+        Parent = Header
+    })
+
+    local Logo = createInstance("ImageLabel", {
+        Name = "Logo",
+        Position = UDim2.new(0.020, 0.000, 0.193, 0.000),
+        Size = UDim2.new(0.000, 35.000, 0.000, 35.000),
+        Parent = Header,
+        BackgroundTransparency = 1,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        ImageColor3 = Color3.fromRGB(227, 145, 255),
+        Image = "rbxassetid://85494310832743",
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local Title = createInstance("TextLabel", {
+        Name = "Title",
+        Position = UDim2.new(0.098, 0.000, 0.000, 0.000),
+        Size = UDim2.new(0.010, 200.000, 1.053, 0.000),
+        Parent = Header,
+        BackgroundTransparency = 1,
+        FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+        Text = Title,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 29,
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local Header_2 = createInstance("Frame", {
+        Name = "Header_2",
+        Position = UDim2.new(0.000, 0.000, 1.000, 0.000),
+        Size = UDim2.new(0.000, 685.000, 0.000, 7.000),
+        Parent = Header,
+        AnchorPoint = Vector2.new(0, 1),
+        BackgroundColor3 = Color3.fromRGB(22, 22, 27),
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local HeaderDiv = createInstance("Frame", {
+        Name = "HeaderDiv",
+        Position = UDim2.new(0.000, 0.000, 0.086, 0.000),
+        Size = UDim2.new(1.000, 0.000, 0.000, 1.000),
+        Parent = Main,
+        BackgroundColor3 = Color3.fromRGB(32, 32, 44),
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local UISizeConstraint = createInstance("UISizeConstraint", {
+        Parent = HeaderDiv,
+        MinSize = Vector2.new(1, 1)
+    })
+
+    local Tabholder = createInstance("Frame", {
+        Name = "Tabholder",
+        Position = UDim2.fromOffset(23, 74),
+        Size = UDim2.new(0.000, 100.000, 0.000, 48.000),
+        Parent = Main,
+        AnchorPoint = Vector2.new(-1, 0),
+        AutomaticSize = Enum.AutomaticSize.X,
+        BackgroundColor3 = Color3.fromRGB(22, 22, 27),
+        BorderSizePixel = 0,
+        ZIndex = 1
+    })
+
+    local UICorner_1 = createInstance("UICorner", {
+        Parent = Tabholder
+    })
+
+    local UIListLayout = createInstance("UIListLayout", {
+        Parent = Tabholder,
+        FillDirection = Enum.FillDirection.Horizontal,
+        HorizontalAlignment = Enum.HorizontalAlignment.Left,
+        VerticalAlignment = Enum.VerticalAlignment.Top,
+        SortOrder = Enum.SortOrder.LayoutOrder
+    })
+
+    function Window:Tab(Title, Img, len)
+        local TabInfo = {}
+
+        local AbsoluteSize;
+
+        local Tab = createInstance("ImageButton", {
+            Name = "Tab",
+            Position = UDim2.new(0.035, 0.000, 0.124, 0.000),
+            Size = UDim2.fromOffset(48, 48),
+            Parent = Tabholder,
+            BackgroundColor3 = Color3.fromRGB(22, 22, 27),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            AutomaticSize = Enum.AutomaticSize.X,
+            BorderSizePixel = 0,
+            AutoButtonColor = false,
+            ZIndex = 1
+        })
+
+        local UICorner_3 = createInstance("UICorner", {
+            Parent = Tab
+        })
+
+        local ImageLabel = createInstance("ImageLabel", {
+            Name = "ImageLabel",
+            Position = UDim2.new(0.5, 0.000, 0.500, 0.000),
+            Size = UDim2.new(0.000, 23.000, 0.000, 19.000),
+            Parent = Tab,
+            BackgroundTransparency = 1,
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            ImageColor3 = Color3.fromRGB(63, 63, 80),
+            Image = "rbxassetid://" .. tostring(Img),
+            BorderSizePixel = 0,
+            ZIndex = 1
+        })
+
+        local UIAspectRatioConstraint = createInstance("UIAspectRatioConstraint", {
+            AspectRatio = 1.000,
+            Parent = ImageLabel
+        })
+
+        local Title_4 = createInstance("TextLabel", {
+            Name = "Title_4",
+            Position = UDim2.new(0.341, 0.000, 0.000, 0.000),
+            Size = UDim2.new(0, 0, 1.016, 0.000),
+            Parent = Tab,
+            BackgroundTransparency = 1,
+            AutomaticSize = Enum.AutomaticSize.X,
+            FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+            Text = Title,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Center,
+            TextColor3 = Color3.fromRGB(63, 63, 80),
+            TextTransparency = 1,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 21,
+            BorderSizePixel = 0,
+            ZIndex = 1
+        })
+
+        local ScrollingFrame = createInstance("ScrollingFrame", {
+            Name = "ScrollingFrame",
+            Position = UDim2.new(0.000, 0.000, 0.208, 0.000),
+            Size = UDim2.new(0.000, 685.000, 0.000, 526.000),
+            Parent = Main,
+            BackgroundTransparency = 1,
+            ScrollBarThickness = 0,
+            ScrollBarImageTransparency = 0.30000001192092896,
+            ClipsDescendants = true,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            Visible = false,
+            BorderSizePixel = 0,
+            ZIndex = 1
+        })
+
+        local UIListLayout_55 = createInstance("UIListLayout", {
+            Parent = ScrollingFrame,
+            Padding = UDim.new(0, 21),
+            FillDirection = Enum.FillDirection.Horizontal,
+            HorizontalAlignment = Enum.HorizontalAlignment.Center,
+            VerticalAlignment = Enum.VerticalAlignment.Top,
+            SortOrder = Enum.SortOrder.LayoutOrder
+        })
+
+        local Left = createInstance("Frame", {
+            Name = "Left",
+            Position = UDim2.new(0.032, 0.000, 0.208, 0.000),
+            Size = UDim2.new(0.000, 309.000, 0.000, 0.000),
+            Parent = ScrollingFrame,
+            BackgroundTransparency = 1,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            BackgroundColor3 = Color3.fromRGB(21, 21, 26),
+            BorderSizePixel = 0,
+            ZIndex = 1
+        })
+
+        local UIListLayout_50 = createInstance("UIListLayout", {
+            Parent = Left,
+            Padding = UDim.new(0, 16),
+            FillDirection = Enum.FillDirection.Vertical,
+            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            VerticalAlignment = Enum.VerticalAlignment.Top,
+            SortOrder = Enum.SortOrder.LayoutOrder
+        })
+
+        local Right = createInstance("Frame", {
+            Name = "Right",
+            Position = UDim2.new(0.516, 0.000, 0.208, 0.000),
+            Size = UDim2.new(0.000, 309.000, 0.000, 0.000),
+            Parent = ScrollingFrame,
+            BackgroundTransparency = 1,
+            AutomaticSize = Enum.AutomaticSize.Y,
+            BackgroundColor3 = Color3.fromRGB(21, 21, 26),
+            BorderSizePixel = 0,
+            ZIndex = 1
+        })
+
+        local UIListLayout_54 = createInstance("UIListLayout", {
+            Parent = Right,
+            Padding = UDim.new(0, 16),
+            FillDirection = Enum.FillDirection.Vertical,
+            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            VerticalAlignment = Enum.VerticalAlignment.Top,
+            SortOrder = Enum.SortOrder.LayoutOrder
+        })
+
+        AbsoluteSize = Tab.AbsoluteSize.X + (len or 40)
+
+        Title_4.AutomaticSize = Enum.AutomaticSize.None
+        Tab.AutomaticSize = Enum.AutomaticSize.None
+
+        function TabInfo:Enable()
+            if Window.PreviousTab then
+                if Window.PreviousTab == TabInfo then
+                    return
+                end
+                Window.PreviousTab:Disable()
+            end
+
+            local S1, S2 = 1, 3
+
+            Spring.target(Tab, S1, S2, {
+                Size = UDim2.fromOffset(AbsoluteSize, 48),
+                BackgroundColor3 = Color3.fromRGB(28, 28, 36)
+            })
+
+            Spring.target(ImageLabel, S1, S2, {
+                Position = UDim2.new(0, 10, 0.5, 0),
+                AnchorPoint = Vector2.new(0, 0.5),
+                ImageColor3 = BlossomLib.PrimaryColor
+            })
+
+            Spring.target(Title_4, S1, S2, {
+                Position = UDim2.fromOffset(45, 0),
+                TextColor3 = Color3.fromRGB(227, 227, 227),
+                TextTransparency = 0
+            })
+
+            ScrollingFrame.Visible = true
+
+            Window.PreviousTab = TabInfo
+        end
+
+        function TabInfo:Disable()
+            local S1, S2 = 1, 3
+
+            Spring.stop(Title_4)
+
+            Spring.target(Tab, S1, S2, {
+                Size = UDim2.fromOffset(48, 48),
+                BackgroundColor3 = Color3.fromRGB(22, 22, 27)
+            })
+
+            Spring.target(ImageLabel, S1, S2, {
+                Position = UDim2.fromScale(0.5, 0.5),
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                ImageColor3 = Color3.fromRGB(63, 63, 80)
+            })
+
+            Spring.target(Title_4, S1, S2, {
+                TextColor3 = Color3.fromRGB(63, 63, 80),
+            })
+
+            Title_4.TextTransparency = 1
+
+            ScrollingFrame.Visible = false
+        end
+
+        if Window.PreviousTab == nil then
+            TabInfo:Enable()
+        end
+
+        Tab.MouseButton1Down:Connect(function()
+            TabInfo:Enable()
+        end)
+
+
+        function TabInfo:Group(place)
+            local GroupInfo = {
+                Side = place or "Left"
+            }
+
+            local FirstComponent = false
+
+            local Group = createInstance("Frame", {
+                Name = "Group",
+                Position = UDim2.new(0.032, 0.000, 0.208, 0.000),
+                Size = UDim2.new(0.000, 309.000, 0.000, 0.000),
+                Parent = GroupInfo.Side:lower() == "left" and Left or Right,
+                AutomaticSize = Enum.AutomaticSize.Y,
+                BackgroundColor3 = Color3.fromRGB(21, 21, 26),
+                BorderSizePixel = 0,
+                ZIndex = 1
+            })
+
+            local UICorner_14 = createInstance("UICorner", {
+                Parent = Group,
+                CornerRadius = UDim.new(0, 12)
+            })
+
+            local UIListLayout_18 = createInstance("UIListLayout", {
+                Parent = Group,
+                Padding = UDim.new(0, 5),
+                FillDirection = Enum.FillDirection.Vertical,
+                HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                VerticalAlignment = Enum.VerticalAlignment.Top,
+                SortOrder = Enum.SortOrder.LayoutOrder
+            })
+
+            local UIPadding = createInstance("UIPadding", {
+                Parent = Group,
+                PaddingBottom = UDim.new(0, 7),
+                PaddingTop = UDim.new(0, 7)
+            })
+
+            function GroupInfo:Div()
+                if not FirstComponent then
+                    FirstComponent = true
+                    return
+                end
+
+                local Div = createInstance("Frame", {
+                    Name = "Div",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(0.000, 280.000, 0.000, 2.000),
+                    Parent = Group,
+                    BackgroundColor3 = Color3.fromRGB(23, 23, 30),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+            end
+
+            function GroupInfo:Toggle(Title, Options)
+                local Settings = {
+                    Value = Options.Default or false,
+                    Callback = Options.Callback or function() end,
+                    Flag = Options.Flag or Title
+                }
+
+                BlossomLib.Flags = BlossomLib.Flags or {}
+                BlossomLib.Flags[Settings.Flag] = Settings
+                BlossomConfig[Settings.Flag] = Settings.Value
+
+
+                GroupInfo:Div()
+
+                local Toggle_19 = createInstance("ImageButton", {
+                    Name = "Toggle_19",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 32.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    ZIndex = 1
+                })
+
+                local ToggleTitle_20 = createInstance("TextLabel", {
+                    Name = "ToggleTitle_20",
+                    Position = UDim2.new(0.040, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(-0.142, 200.000, 1.000, 0.000),
+                    Parent = Toggle_19,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(86, 86, 110),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 19,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local Frame_21 = createInstance("Frame", {
+                    Name = "Frame_21",
+                    Position = UDim2.new(0.838, 0.000, 0.219, 0.000),
+                    Size = UDim2.new(0.000, 39.000, 0.000, 18.000),
+                    Parent = Toggle_19,
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_22 = createInstance("UICorner", {
+                    Parent = Frame_21,
+                    CornerRadius = UDim.new(1, 0)
+                })
+
+                local Knob_25 = createInstance("ImageLabel", {
+                    Name = "Knob_25",
+                    Position = UDim2.new(0.000, 5.000, 0.500, 0.000),
+                    Size = UDim2.new(0.000, 10.000, 0.000, 10.000),
+                    Parent = Frame_21,
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(0, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = Color3.fromRGB(63, 63, 80),
+                    Image = "rbxassetid://5552526748",
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                function Settings:Switch(v)
+                    if v == nil then
+                        Settings.Value = not Settings.Value
+                    else
+                        Settings.Value = v
+                    end
+
+                    BlossomConfig[Settings.Flag] = Settings.Value
+
+                    if Settings.Value then
+                        Spring.target(ToggleTitle_20, 1, 3, {
+                            TextColor3 = Color3.fromRGB(215, 215, 215)
+                        })
+
+                        Spring.target(Knob_25, 1, 3, {
+                            Position = UDim2.new(0.000, 24.000, 0.500, 0.000),
+                            ImageColor3 = BlossomLib.PrimaryColor
+                        })
+
+                        Spring.target(Frame_21, 1, 3, {
+                            BackgroundColor3 = BlossomLib.PrimaryColor,
+                            BackgroundTransparency = .8
+                        })
+                    else
+                        Spring.target(ToggleTitle_20, 1, 3, {
+                            TextColor3 = Color3.fromRGB(86, 86, 110)
+                        })
+
+                        Spring.target(Knob_25, 1, 3, {
+                            Position = UDim2.new(0.000, 5.000, 0.500, 0.000),
+                            ImageColor3 = Color3.fromRGB(63, 63, 80)
+                        })
+
+                        Spring.target(Frame_21, 1, 3, {
+                            BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                            BackgroundTransparency = 0
+                        })
+                    end
+
+                    Settings.Callback(Settings.Value)
+                end
+
+                Settings:Switch(Settings.Value)
+
+                Toggle_19.MouseButton1Down:Connect(function()
+                    Settings:Switch()
+                end)
+
+                return Settings
+            end
+
+            function GroupInfo:Slider(Title, Options)
+                local Settings = {
+                    Value    = Options.Default or 0,
+                    Min      = Options.Min or 0,
+                    Max      = Options.Max or 100,
+                    Step     = Options.Step or 1,
+                    Suffix   = Options.Suffix or "",
+                    Callback = Options.Callback or function() end,
+                    Flag     = Options.Flag or Title
+                }
+
+                BlossomLib.Flags[Settings.Flag] = Settings
+                BlossomConfig[Settings.Flag] = Settings.Value
+
+
+                GroupInfo:Div()
+
+                local Slider = createInstance("ImageButton", {
+                    Name = "Slider",
+                    Position = UDim2.new(0.000, 0.000, 0.642, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 55.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    ZIndex = 1
+                })
+
+                local SliderTitle = createInstance("TextLabel", {
+                    Name = "SliderTitle",
+                    Position = UDim2.new(0.040, 0.000, 0.220, 0.000),
+                    Size = UDim2.new(-0.142, 200.000, 0.280, 0.000),
+                    Parent = Slider,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(215, 215, 215),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 19,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local SliderVal = createInstance("TextBox", {
+                    Name = "SliderVal",
+                    Position = UDim2.new(0.854, 0.000, 0.220, 0.000),
+                    Size = UDim2.new(0.050, 15.000, 0.280, 0.000),
+                    Parent = Slider,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = tostring(Settings.Value) .. "" .. Settings.Suffix,
+                    TextXAlignment = Enum.TextXAlignment.Right,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(215, 215, 215),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 19,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local SliderBack = createInstance("Frame", {
+                    Name = "SliderBack",
+                    Position = UDim2.new(0.500, 0.000, 0.680, 0.000),
+                    Size = UDim2.new(0.000, 281.000, 0.000, 6.000),
+                    Parent = Slider,
+                    AnchorPoint = Vector2.new(0.5, 0),
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_26 = createInstance("UICorner", {
+                    Parent = SliderBack,
+                    CornerRadius = UDim.new(1, 0)
+                })
+
+                local SliderMain = createInstance("Frame", {
+                    Name = "2SliderMain",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(0.000, 172.000, 0.000, 6.000),
+                    Parent = SliderBack,
+                    BackgroundColor3 = Color3.fromRGB(227, 145, 255),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_27 = createInstance("UICorner", {
+                    Parent = SliderMain,
+                    CornerRadius = UDim.new(1, 0)
+                })
+
+                local UIGradient = createInstance("UIGradient", {
+                    Parent = SliderMain,
+                    Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+                    }),
+                    Transparency = NumberSequence.new({
+                        NumberSequenceKeypoint.new(0, 0),
+                        NumberSequenceKeypoint.new(1, .8)
+                    })
+
+                })
+
+                local Knob_28 = createInstance("ImageLabel", {
+                    Name = "Knob_28",
+                    Position = UDim2.new(0, 0, 0.5, 0),
+                    Size = UDim2.new(0, 10, 0, 10),
+                    Parent = SliderBack,
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = Color3.fromRGB(255, 255, 255),
+                    Image = "rbxassetid://5552526748",
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+
+                SliderVal.FocusLost:Connect(function()
+                    local toNum
+                    pcall(function()
+                        toNum = tonumber(SliderVal.Text)
+                    end)
+                    if toNum then
+                        Settings:Set(math.clamp(SliderVal.Text, Settings.Min, Settings.Max))
+                    else
+                        SliderVal.Text = tostring(Settings.Value)
+                    end
+                end)
+
+                -- // Functions
+
+                local PercentVal = Settings.Value
+                if math.abs(Settings.Min) ~= Settings.Min then
+                    PercentVal = Settings.Value + math.abs(Settings.Min)
+                elseif Settings.Min ~= 0 then
+                    PercentVal = Settings.Value - math.abs(Settings.Min)
+                end
+                local Percent = (PercentVal / (Settings.Max - Settings.Min));
+
+                local decimalPlaces = 0
+                if Settings.Step < 1 then
+                    decimalPlaces = string.match(tostring(Settings.Step), "%.(%d+)") and
+                        #string.match(tostring(Settings.Step), "%.(%d+)") or 0
+                end
+
+                local Connection;
+                UIS.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                        if (Connection) then
+                            Connection:Disconnect();
+                            Connection = nil;
+                        end;
+                    end;
+                end)
+
+                function Settings:Set(Value)
+                    if math.abs(Settings.Min) ~= Settings.Min then
+                        Value = Value + math.abs(Settings.Min)
+                    elseif Settings.Min ~= 0 then
+                        Value = Value - math.abs(Settings.Min)
+                    end
+
+                    BlossomConfig[Settings.Flag] = Settings.Value
+
+                    local Percent = (Value / (Settings.Max - Settings.Min));
+                    local Steps = (Settings.Max - Settings.Min) / Settings.Step
+                    local NearestStep = math.floor(Percent * Steps + 0.5) / Steps
+
+                    Settings.Value = Settings.Min + (Settings.Max - Settings.Min) * NearestStep
+
+                    Spring.target(SliderMain, 1, 4, {
+                        Size = UDim2.fromScale(NearestStep, 1)
+                    })
+
+                    Spring.target(Knob_28, 1, 4, {
+                        Position = UDim2.fromScale(NearestStep, 0.5)
+                    })
+
+                    local decimalPlaces = 0
+                    if Settings.Step < 1 then
+                        decimalPlaces = string.match(tostring(Settings.Step), "%.(%d+)") and
+                            #string.match(tostring(Settings.Step), "%.(%d+)") or 0
+                    end
+
+                    Settings.Value = tonumber(string.format("%.2f", Settings.Value))
+                    SliderVal.Text = string.format("%." .. decimalPlaces .. "f", Settings.Value) .. Settings.Suffix
+                    pcall(Settings.Callback, Settings.Value)
+                end
+
+                Settings:Set(Settings.Value)
+
+                Slider.MouseButton1Down:Connect(function()
+                    if (Connection) then
+                        Connection:Disconnect();
+                    end;
+
+                    Connection = RunService.Heartbeat:Connect(function()
+                        local Mouse = UIS:GetMouseLocation();
+                        Percent = math.clamp((Mouse.X - SliderBack.AbsolutePosition.X) / (SliderBack.AbsoluteSize.X), 0,
+                            1);
+
+                        local Steps = (Settings.Max - Settings.Min) / Settings.Step
+                        local NearestStep = math.floor(Percent * Steps + 0.5) / Steps
+
+                        Settings.Value = Settings.Min + (Settings.Max - Settings.Min) * NearestStep
+
+                        Settings:Set(Settings.Value)
+                    end);
+                end)
+
+                return Settings
+            end
+
+            function GroupInfo:Dropdown(Title, Options)
+                local Settings = {
+                    Value = Options.Default or "None",
+                    List = Options.List or {},
+                    Multi = Options.Multi or false,
+                    Callback = Options.Callback or function() end,
+                    Flag = Options.Flag or Title
+                }
+
+                BlossomLib.Flags[Settings.Flag] = Settings
+                BlossomConfig[Settings.Flag] = Settings.Value
+
+
+                GroupInfo:Div()
+
+                local Dropdown = createInstance("ImageButton", {
+                    Name = "Dropdown",
+                    Position = UDim2.new(0.000, 0.000, 0.642, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 68.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    AutoButtonColor = false,
+                    BorderSizePixel = 0,
+                    ZIndex = 2
+                })
+
+                local DropdownTitle = createInstance("TextLabel", {
+                    Name = "DropdownTitle",
+                    Position = UDim2.new(0.040, 0.000, 0.000, 8.000),
+                    Size = UDim2.new(-0.142, 200.000, 0.280, 0.000),
+                    Parent = Dropdown,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(86, 86, 110),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 19,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local DropdownBG = createInstance("Frame", {
+                    Name = "DropdownBG",
+                    Position = UDim2.new(0.036, 0.000, 0.000, 33.000),
+                    Size = UDim2.new(0.000, 282.000, 0.000, 30.000),
+                    Parent = Dropdown,
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_29 = createInstance("UICorner", {
+                    Parent = DropdownBG
+                })
+
+                local SelectedTitle = createInstance("TextLabel", {
+                    Name = "SelectedTitle",
+                    Position = UDim2.new(0.053, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(0.947, 0.000, 1.000, 0.000),
+                    Parent = DropdownBG,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = Settings.Value,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(215, 215, 215),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 17,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local Arrow = createInstance("ImageLabel", {
+                    Name = "Arrow",
+                    Position = UDim2.new(0.897, 0.000, 0.167, 0.000),
+                    Size = UDim2.new(0.000, 20.000, 0.000, 20.000),
+                    Parent = DropdownBG,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = Color3.fromRGB(255, 255, 255),
+                    Image = "rbxassetid://6034818372",
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local OptionsHolder = createInstance("ImageButton", {
+                    Name = "OptionsHolder",
+                    Position = UDim2.new(0.036, 0.000, 1.015, 0.000),
+                    Size = UDim2.new(0.000, 282.000, 0.000, 0.000),
+                    Parent = Dropdown,
+                    Visible = true,
+                    BackgroundColor3 = Color3.fromRGB(27, 26, 33),
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    ZIndex = 1
+                })
+
+                local UICorner_30 = createInstance("UICorner", {
+                    Parent = OptionsHolder
+                })
+
+                local UIListLayout_31 = createInstance("UIListLayout", {
+                    Parent = OptionsHolder,
+                    Padding = UDim.new(0, 10),
+                    FillDirection = Enum.FillDirection.Vertical,
+                    HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                    VerticalAlignment = Enum.VerticalAlignment.Top,
+                    SortOrder = Enum.SortOrder.LayoutOrder
+                })
+
+                local UIPadding_35 = createInstance("UIPadding", {
+                    Parent = OptionsHolder,
+                    PaddingTop = UDim.new(0, 10)
+                })
+
+                local TotalSize = 10
+                local IsOpen = true
+                local FuncTable = {}
+                local SelectedOptions = {}
+
+                for i, v in Settings.List do
+                    TotalSize += 45
+
+                    local OptionFuncs = {
+                        Enabled = false
+                    }
+
+                    table.insert(FuncTable, OptionFuncs)
+
+                    local Option = createInstance("ImageButton", {
+                        Name = "Option",
+                        Position = UDim2.new(0.068, 0.000, 1.265, 0.000),
+                        Size = UDim2.new(0.000, 253.000, 0.000, 35.000),
+                        Parent = OptionsHolder,
+                        BackgroundTransparency = 1,
+                        BackgroundColor3 = Color3.fromRGB(33, 34, 45),
+                        BorderSizePixel = 0,
+                        AutoButtonColor = false,
+                        ZIndex = 1
+                    })
+
+                    local UICorner_32 = createInstance("UICorner", {
+                        Parent = Option
+                    })
+
+                    local ImageLabel_33 = createInstance("ImageLabel", {
+                        Name = "ImageLabel_33",
+                        Position = UDim2.new(0.050, 0.000, 0.500, 0.000),
+                        Size = UDim2.new(0.000, 14.000, 0.000, 14.000),
+                        Parent = Option,
+                        BackgroundTransparency = 1,
+                        AnchorPoint = Vector2.new(0, 0.5),
+                        ImageTransparency = 1,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        ImageColor3 = Color3.fromRGB(227, 145, 255),
+                        Image = "rbxassetid://10709790644",
+                        BorderSizePixel = 0,
+                        ZIndex = 1
+                    })
+
+                    local SelectedTitle_34 = createInstance("TextLabel", {
+                        Name = "SelectedTitle_34",
+                        Position = UDim2.new(0.050, 0.000, 0.000, 0.000),
+                        Size = UDim2.new(0.950, 0.000, 1.000, 0.000),
+                        Parent = Option,
+                        BackgroundTransparency = 1,
+                        FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                        Text = v,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                        TextYAlignment = Enum.TextYAlignment.Center,
+                        TextColor3 = Color3.fromRGB(86, 86, 110),
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        TextSize = 17,
+                        BorderSizePixel = 0,
+                        ZIndex = 1
+                    })
+
+                    function OptionFuncs:Toggle(y)
+                        if y then
+                            Spring.target(Option, 1, 3, {
+                                BackgroundTransparency = 0
+                            })
+
+                            Spring.target(SelectedTitle_34, 1, 3, {
+                                Position = UDim2.fromScale(.18, 0),
+                                TextColor3 = Color3.fromRGB(255, 255, 255)
+                            })
+
+                            Spring.target(ImageLabel_33, 1, 3, {
+                                ImageTransparency = 0
+                            })
+
+                            table.insert(SelectedOptions, v)
+
+                            if not Settings.Multi then
+                                SelectedTitle.Text = v
+                                Settings.Value = v
+                            end
+                        else
+                            Spring.target(Option, 1, 3, {
+                                BackgroundTransparency = 1
+                            })
+
+                            Spring.target(SelectedTitle_34, 1, 3, {
+                                Position = UDim2.fromScale(.050, 0),
+                                TextColor3 = Color3.fromRGB(86, 86, 110)
+                            })
+
+                            Spring.target(ImageLabel_33, 1, 3, {
+                                ImageTransparency = 1
+                            })
+
+                            table.remove(SelectedOptions, table.find(SelectedOptions, v))
+
+                            if not Settings.Multi then
+                                SelectedTitle.Text = "None"
+                                Settings.Value = "None"
+                            end
+                        end
+
+                        if Settings.Multi then
+                            if not SelectedOptions[1] then
+                                SelectedTitle.Text = "None"
+                            else
+                                SelectedTitle.Text = table.concat(SelectedOptions, ", ")
+                            end
+
+                            Settings.Callback(SelectedOptions)
+                        end
+                    end
+
+                    Option.MouseButton1Down:Connect(function()
+                        if not Settings.Multi then
+                            for x, y in FuncTable do
+                                if y ~= OptionFuncs then
+                                    y:Toggle(false)
+                                    y.Enabled = false
+                                end
+                            end
+                        end
+
+                        OptionFuncs.Enabled = not OptionFuncs.Enabled
+                        OptionFuncs:Toggle(OptionFuncs.Enabled)
+                        if not Settings.Multi then
+                            Settings.Callback(v)
+                        end
+                    end)
+                end
+
+                function Settings:ToggleOpen(v)
+                    if v then
+                        Spring.stop(OptionsHolder)
+                        Spring.stop(Dropdown)
+
+                        Window.canOpen = false
+
+                        Dropdown.ZIndex = 15
+                        Group.ZIndex = 15
+
+                        Spring.target(OptionsHolder, 1, 3, {
+                            Size = UDim2.fromOffset(282, TotalSize)
+                        })
+
+                        Spring.target(Arrow, 1, 3, {
+                            Rotation = 180
+                        })
+
+                        Window.OpenedDropdown = Settings
+
+                        Spring.completed(Arrow, function()
+                            Window.canOpen = true
+                        end)
+                    else
+                        Window.canOpen = false
+
+                        Spring.target(OptionsHolder, 1, 3, {
+                            Size = UDim2.fromOffset(282, 0)
+                        })
+
+                        Spring.target(Arrow, 1, 3, {
+                            Rotation = 0
+                        })
+
+                        Spring.target(Dropdown, 1, (v and 1.5 or 5), {
+                            ZIndex = 2
+                        })
+
+                        Spring.target(Group, 1, (v and 1.5 or 5), {
+                            ZIndex = 1
+                        })
+
+                        Window.OpenedDropdown = nil
+
+                        Spring.completed(Arrow, function()
+                            Window.canOpen = true
+                        end)
+                    end
+
+                    for x, y in OptionsHolder:GetDescendants() do
+                        if y.Name == "Option" then
+                            Spring.target(y, 1, (v and 1.5 or 5), {
+                                Visible = v
+                            })
+                        end
+                    end
+
+                    IsOpen = not IsOpen
+                end
+
+                Settings:ToggleOpen(false)
+
+                Dropdown.MouseButton1Down:Connect(function()
+                    if not Window.canOpen then return end
+                    if Window.OpenedDropdown ~= nil and Window.OpenedDropdown ~= Settings then
+                        Window.OpenedDropdown:ToggleOpen(false)
+                        task.wait(.5)
+                    end
+                    Settings:ToggleOpen(not IsOpen)
+                end)
+
+                return Settings
+            end
+
+            function GroupInfo:Textbox(Title, Options)
+                local Settings = {
+                    Value = "",
+                    Callback = Options.Callback or function() end,
+                    Flag = Options.Flag or Title
+                }
+
+                BlossomLib.Flags[Settings.Flag] = Settings
+                BlossomConfig[Settings.Flag] = Settings.Value
+
+                GroupInfo:Div()
+
+                local Textbox = createInstance("Frame", {
+                    Name = "Textbox",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 42.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local Typebox = createInstance("Frame", {
+                    Name = "Typebox",
+                    Position = UDim2.new(0.500, 0.000, 0.500, 0.000),
+                    Size = UDim2.new(0.000, 282.000, 0.000, 30.000),
+                    Parent = Textbox,
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_44 = createInstance("UICorner", {
+                    Parent = Typebox
+                })
+
+                local Enterbox = createInstance("TextBox", {
+                    Name = "Enterbox",
+                    Position = UDim2.new(0.053, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(0.947, 0.000, 1.000, 0.000),
+                    Parent = Typebox,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(86, 86, 110),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 17,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local Arrow_45 = createInstance("ImageLabel", {
+                    Name = "Arrow_45",
+                    Position = UDim2.new(0.897, 0.000, 0.500, 0.000),
+                    Size = UDim2.new(0.000, 12.000, 0.000, 12.000),
+                    Parent = Enterbox,
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(0, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    ImageColor3 = BlossomLib.PrimaryColor,
+                    Image = "rbxassetid://10734919691",
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                function Settings:Set(v)
+                    Settings.Value = v
+                    Enterbox.Text = v
+                    BlossomConfig[Settings.Flag] = v
+                end
+
+                Enterbox.FocusLost:Connect(function()
+                    Settings.Callback(Enterbox.Text)
+                    if Enterbox.Text == "" then
+                        Enterbox.Text = Title
+                    end
+                    Settings.Value = Enterbox.Text
+                    BlossomConfig[Settings.Flag] = Settings.Value
+                    Settings.Callback(Settings.Value)
+                end)
+
+                return Settings
+            end
+
+            function GroupInfo:Button(Title, Options, AddDiv)
+                local Settings = {
+                    Callback = Options and Options.Callback or function() end
+                }
+
+                if AddDiv then
+                    GroupInfo:Div()
+                end
+
+                local Button1 = createInstance("ImageButton", {
+                    Name = "Button1",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 42.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    ZIndex = 1
+                })
+
+                local Typebox_47 = createInstance("Frame", {
+                    Name = "Typebox_47",
+                    Position = UDim2.new(0.500, 0.000, 0.500, 0.000),
+                    Size = UDim2.new(0.000, 282.000, 0.000, 30.000),
+                    Parent = Button1,
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner_48 = createInstance("UICorner", {
+                    Parent = Typebox_47
+                })
+
+                local TitleBox = createInstance("TextLabel", {
+                    Name = "TitleBox",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 1.000, 0.000),
+                    Parent = Typebox_47,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Center,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(215, 215, 215),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 17,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                Button1.MouseButton1Down:Connect(function()
+                    Spring.target(Typebox_47, 1, 5, {
+                        BackgroundColor3 = BlossomLib.PrimaryColor,
+                        BackgroundTransparency = .7,
+                        Size = UDim2.fromOffset(260, 25)
+                    })
+
+                    Settings.Callback()
+                end)
+
+                Button1.MouseButton1Up:Connect(function()
+                    Spring.stop(Typebox_47)
+
+                    Spring.target(Typebox_47, 1, 3, {
+                        BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                        BackgroundTransparency = 0,
+                        Size = UDim2.fromOffset(282, 30)
+                    })
+                end)
+
+                Button1.MouseLeave:Connect(function()
+                    Spring.target(Typebox_47, 1, 3, {
+                        BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                        BackgroundTransparency = 0,
+                        Size = UDim2.fromOffset(282, 30)
+                    })
+                end)
+            end
+
+            function GroupInfo:Keybind(Title, Options)
+                local Settings = {
+                    Value = Options.Default or "None",
+                    Callback = Options.Callback or function() end,
+                    Flag = Options.Flag or Title
+                }
+
+                BlossomLib.Flags[Settings.Flag] = Settings
+                BlossomConfig[Settings.Flag] = Settings.Value
+
+
+                GroupInfo:Div()
+
+                local Keybind = createInstance("ImageButton", {
+                    Name = "Keybind",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 0.000, 32.000),
+                    Parent = Group,
+                    BackgroundTransparency = 1,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BorderSizePixel = 0,
+                    AutoButtonColor = false,
+                    ZIndex = 1
+                })
+
+                local BindTitle = createInstance("TextLabel", {
+                    Name = "BindTitle",
+                    Position = UDim2.new(0.040, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(-0.142, 200.000, 1.000, 0.000),
+                    Parent = Keybind,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+                    Text = Title,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(86, 86, 110),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 19,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local BindBG = createInstance("Frame", {
+                    Name = "BindBG",
+                    Position = UDim2.new(0.146, 250.000, 0.500, 0.000),
+                    Size = UDim2.new(0.000, 0.000, 0.000, 28.000),
+                    Parent = Keybind,
+                    AnchorPoint = Vector2.new(1, 0.5),
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    BackgroundColor3 = Color3.fromRGB(27, 27, 34),
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UICorner = createInstance("UICorner", {
+                    Parent = BindBG
+                })
+
+                local SelectedBind = createInstance("TextLabel", {
+                    Name = "SelectedBind",
+                    Position = UDim2.new(0.000, 0.000, 0.000, 0.000),
+                    Size = UDim2.new(1.000, 0.000, 1.000, 0.000),
+                    Parent = BindBG,
+                    BackgroundTransparency = 1,
+                    FontFace = Font.new("rbxassetid://12187364147", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+                    Text = Settings.Value,
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    TextXAlignment = Enum.TextXAlignment.Center,
+                    TextYAlignment = Enum.TextYAlignment.Center,
+                    TextColor3 = Color3.fromRGB(86, 86, 110),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    TextSize = 17,
+                    BorderSizePixel = 0,
+                    ZIndex = 1
+                })
+
+                local UIPadding = createInstance("UIPadding", {
+                    Parent = BindBG,
+                    PaddingLeft = UDim.new(0, 10),
+                    PaddingRight = UDim.new(0, 10)
+                })
+
+                local Listening = false
+
+                function Settings:SetText(String)
+                    local length = string.len(String)
+                    for i = length, 0, -1 do
+                        task.wait(.005)
+                        SelectedBind.Text = string.sub(String, i)
+                    end
+                end
+
+                function Settings:Start()
+                    Listening = true
+
+                    Spring.target(SelectedBind, 1, 3, {
+                        TextColor3 = Color3.fromRGB(255, 255, 255),
+                    })
+
+                    Settings:SetText("Awaiting Input")
+                end
+
+                function Settings:Stop(bind)
+                    local Key = bind ~= nil and bind or "None"
+                    Listening = false
+
+                    Spring.target(SelectedBind, 1, 3, {
+                        TextColor3 = Color3.fromRGB(86, 86, 110),
+                    })
+
+                    SelectedBind.Text = Key
+                    Settings.Value = Key
+                    BlossomConfig[Settings.Flag] = Settings.Value
+                    Settings.Callback(Key)
+                end
+
+                Keybind.MouseButton1Down:Connect(function()
+                    if Listening then
+                        Settings:Stop()
+                    else
+                        Settings:Start()
+                    end
+                end)
+
+                UIS.InputBegan:Connect(function(input, gpe)
+                    if not gpe then
+                        if Listening and (input.UserInputType == Enum.UserInputType.Keyboard or input.UserInputType == Enum.UserInputType.Gamepad1) then
+                            if input.KeyCode == Enum.KeyCode.Backspace then
+                                Settings:Stop("None")
+                            else
+                                local Key = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                                Settings:Stop(Key)
+                            end
+                        else
+                            if Settings.Value ~= "None" then
+                                local currentkey = tostring(input.KeyCode):gsub("Enum.KeyCode.", "")
+                                if currentkey == Settings.Value then
+                                    Settings.Callback(Settings.Value)
+                                end
+                            end
+                        end
+                    end
+                end)
+
+                return Settings
+            end
+
+            return GroupInfo
+        end
+
+        return TabInfo
+    end
+
+    return Window
+end
