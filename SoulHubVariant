@@ -136,7 +136,7 @@ function BlossomLib:Create(Title)
 
     local Logo = createInstance("ImageLabel", {
         Name = "Logo",
-        Position = UDim2.new(0.030, 0.000, 0.193, 0.000),
+        Position = UDim2.new(0.020, 0.000, 0.08, 0.000),
         Size = UDim2.new(0.000, 50.000, 0.000, 50.000),
         Parent = Header,
         BackgroundTransparency = 1,
@@ -180,7 +180,7 @@ function BlossomLib:Create(Title)
         Position = UDim2.new(0.000, 0.000, 0.086, 0.000),
         Size = UDim2.new(1.000, 0.000, 0.000, 1.000),
         Parent = Main,
-        BackgroundColor3 = Color3.fromRGB(32, 32, 44),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0,
         ZIndex = 1
     })
